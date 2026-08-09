@@ -34,6 +34,7 @@ export default function App() {
         initial={{ opacity: 0 }}
         animate={{ opacity: isLoading ? 0 : 1 }}
         transition={{ duration: 0.8, ease: 'easeOut' }}
+        style={{ width: '100%' }}
       >
         <Navbar />
         <main>
