@@ -15,8 +15,12 @@ import {
 } from 'lucide-react';
 import CTAVisual from './3d/CTAVisual';
 
-// Configurable Download URL: Set to your GitHub Release, Cloudflare R2, Google Drive, or hosted APK link
-const ANDROID_DOWNLOAD_URL: string = 'https://github.com/AliImtiaz247/calorix-website/releases/latest/download/app-release.apk';
+// Stable releases automatically use GitHub's latest stable release.
+const STABLE_DOWNLOAD_URL = 'https://github.com/AliImtiaz247/calorix-website/releases/latest/download/Calorix.apk';
+
+// Current pre-release. Keep this fixed so the active pre-release remains downloadable
+// even after a future stable release is published.
+const PRERELEASE_DOWNLOAD_URL = 'https://github.com/AliImtiaz247/calorix-website/releases/download/v1.0.0/Calorix-v1.0.0.apk';
 
 interface AppDownloadProps {
   onBack: () => void;
@@ -39,25 +43,18 @@ export default function AppDownload({ onBack }: AppDownloadProps) {
     };
   }, []);
 
-  const handleDownload = () => {
-    const url = ANDROID_DOWNLOAD_URL;
+  const handleDownload = (url: string, message: string) => {
+    setToastMessage(message);
 
-    if (url && url.trim() !== '') {
-      setToastMessage('Starting Calorix APK download...');
-      
-      const link = document.createElement('a');
-      link.href = url;
-      link.target = '_blank';
-      link.download = 'Calorix.apk';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+    const link = document.createElement('a');
+    link.href = url;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 
-      setTimeout(() => setToastMessage(null), 3000);
-    } else {
-      setToastMessage('Calorix for Android is coming soon!');
-      setTimeout(() => setToastMessage(null), 3000);
-    }
+    setTimeout(() => setToastMessage(null), 3000);
   };
 
   const featureCards = [
@@ -71,11 +68,9 @@ export default function AppDownload({ onBack }: AppDownloadProps) {
 
   return (
     <div style={{ background: '#07090e', color: '#f8fafc', minHeight: '100vh', position: 'relative', overflowX: 'hidden' }}>
-      {/* Background Ambient Glows */}
       <div className="bg-glow-emerald" style={{ top: '10%', left: '5%', width: '600px', height: '600px' }} />
       <div className="bg-glow-violet" style={{ top: '40%', right: '5%', width: '600px', height: '600px' }} />
 
-      {/* Header Bar */}
       <header
         style={{
           position: 'sticky',
@@ -88,7 +83,6 @@ export default function AppDownload({ onBack }: AppDownloadProps) {
         }}
       >
         <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          {/* Back Button */}
           <button
             onClick={onBack}
             className="btn-hero-secondary"
@@ -98,7 +92,6 @@ export default function AppDownload({ onBack }: AppDownloadProps) {
             <ArrowLeft size={18} /> Back to website
           </button>
 
-          {/* Brand Logo */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <div style={{ width: '36px', height: '36px', borderRadius: '12px', background: 'linear-gradient(135deg, #10b981, #06b6d4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Flame size={20} color="#ffffff" />
@@ -110,9 +103,7 @@ export default function AppDownload({ onBack }: AppDownloadProps) {
         </div>
       </header>
 
-      {/* Main Download Content */}
       <main className="section-container" style={{ paddingTop: '60px', paddingBottom: '80px' }}>
-        {/* Toast Alert Banner */}
         <AnimatePresence>
           {toastMessage && (
             <motion.div
@@ -144,7 +135,6 @@ export default function AppDownload({ onBack }: AppDownloadProps) {
           )}
         </AnimatePresence>
 
-        {/* Hero Copy */}
         <div style={{ textAlign: 'center', maxWidth: '760px', margin: '0 auto 60px auto' }}>
           <div className="glass-pill" style={{ marginBottom: '20px', borderColor: 'rgba(16, 185, 129, 0.35)' }}>
             <Sparkles size={14} color="#34d399" />
@@ -168,63 +158,105 @@ export default function AppDownload({ onBack }: AppDownloadProps) {
           </h1>
 
           <p style={{ fontSize: '1.15rem', color: '#94a3b8', lineHeight: 1.7 }}>
-            Download the official Calorix Android APK (v1.0) and start tracking your nutrition, calories, activity, and progress with AI-powered insights.
+            Download the official Calorix Android APK and start tracking your nutrition, calories, activity, and progress with AI-powered insights.
           </p>
         </div>
 
-        {/* Grid Layout: Download Cards + 3D Preview */}
         <div
           style={{
             display: 'grid',
             gridTemplateColumns: '1fr 1fr',
-            gap: '48px',
-            alignItems: 'center',
+            gap: '24px',
+            alignItems: 'stretch',
             marginBottom: '80px',
           }}
           className="download-grid"
         >
-          {/* Left Side: Platform Selection */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-            {/* Android Option */}
-            <div
-              className="glass-panel"
-              style={{
-                padding: '28px',
-                borderColor: 'rgba(16, 185, 129, 0.4)',
-                background: 'linear-gradient(135deg, rgba(16,185,129,0.12) 0%, rgba(11,15,25,0.92) 100%)',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '14px',
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                <div style={{ width: '52px', height: '52px', borderRadius: '16px', background: 'rgba(16,185,129,0.25)', border: '1px solid rgba(16,185,129,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Smartphone size={28} color="#34d399" />
-                </div>
-                <div>
-                  <h3 style={{ fontSize: '1.5rem', fontWeight: 900, color: '#ffffff' }}>Android APK</h3>
-                  <div style={{ fontSize: '0.9rem', color: '#94a3b8' }}>Official Release Package (~64.5 MB)</div>
-                </div>
-              </div>
-
-              <button
-                onClick={handleDownload}
-                className="btn-hero-primary"
-                style={{ width: '100%', minHeight: '52px', marginTop: '6px', fontSize: '1.1rem' }}
-                aria-label="Download Calorix Android APK"
-              >
-                <Download size={20} /> Download Calorix APK
-              </button>
+          {/* Stable release card. It automatically follows the latest stable GitHub Release. */}
+          <div
+            className="glass-panel"
+            style={{
+              padding: '28px',
+              borderColor: 'rgba(16, 185, 129, 0.4)',
+              background: 'linear-gradient(135deg, rgba(16,185,129,0.12) 0%, rgba(11,15,25,0.92) 100%)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '14px',
+            }}
+          >
+            <div style={{ display: 'inline-flex', alignSelf: 'flex-start', padding: '6px 12px', borderRadius: '999px', background: 'rgba(16,185,129,0.16)', border: '1px solid rgba(16,185,129,0.35)', color: '#34d399', fontSize: '0.75rem', fontWeight: 900, letterSpacing: '0.5px' }}>
+              STABLE RELEASE
             </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+              <div style={{ width: '52px', height: '52px', borderRadius: '16px', background: 'rgba(16,185,129,0.25)', border: '1px solid rgba(16,185,129,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Smartphone size={28} color="#34d399" />
+              </div>
+              <div>
+                <h3 style={{ fontSize: '1.5rem', fontWeight: 900, color: '#ffffff' }}>Android APK</h3>
+                <div style={{ fontSize: '0.9rem', color: '#94a3b8' }}>Latest stable version</div>
+              </div>
+            </div>
+
+            <button
+              onClick={() => handleDownload(STABLE_DOWNLOAD_URL, 'Starting latest stable Calorix APK download...')}
+              className="btn-hero-primary"
+              style={{ width: '100%', minHeight: '52px', marginTop: '6px', fontSize: '1.05rem' }}
+              aria-label="Download latest stable Calorix Android APK"
+            >
+              <Download size={20} /> Download Stable APK
+            </button>
           </div>
 
-          {/* Right Side: 3D Smartphone Stage */}
-          <div style={{ position: 'relative' }}>
-            <CTAVisual reducedMotion={reducedMotion} />
+          {/* Current pre-release card. This remains pinned to v1.0.0. */}
+          <div
+            className="glass-panel"
+            style={{
+              padding: '28px',
+              borderColor: 'rgba(139, 92, 246, 0.5)',
+              background: 'linear-gradient(135deg, rgba(139,92,246,0.14) 0%, rgba(11,15,25,0.92) 100%)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '14px',
+            }}
+          >
+            <div style={{ display: 'inline-flex', alignSelf: 'flex-start', padding: '6px 12px', borderRadius: '999px', background: 'rgba(139,92,246,0.18)', border: '1px solid rgba(139,92,246,0.4)', color: '#c4b5fd', fontSize: '0.75rem', fontWeight: 900, letterSpacing: '0.5px' }}>
+              PRE-RELEASE • v1.0.0
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+              <div style={{ width: '52px', height: '52px', borderRadius: '16px', background: 'rgba(139,92,246,0.22)', border: '1px solid rgba(139,92,246,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Sparkles size={28} color="#c4b5fd" />
+              </div>
+              <div>
+                <h3 style={{ fontSize: '1.5rem', fontWeight: 900, color: '#ffffff' }}>Test Version</h3>
+                <div style={{ fontSize: '0.9rem', color: '#94a3b8' }}>Early access • ~64.5 MB</div>
+              </div>
+            </div>
+
+            <button
+              onClick={() => handleDownload(PRERELEASE_DOWNLOAD_URL, 'Starting Calorix v1.0.0 pre-release download...')}
+              style={{
+                width: '100%',
+                minHeight: '52px',
+                marginTop: '6px',
+                fontSize: '1.05rem',
+                borderRadius: '14px',
+                border: '1px solid rgba(167,139,250,0.55)',
+                background: 'rgba(139,92,246,0.16)',
+                color: '#ffffff',
+                fontWeight: 800,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '10px',
+              }}
+              aria-label="Download Calorix v1.0.0 pre-release APK"
+            >
+              <Download size={20} /> Download Pre-release APK
+            </button>
           </div>
         </div>
 
-        {/* Features Summary Section */}
         <div style={{ marginTop: '40px' }}>
           <div style={{ textAlign: 'center', maxWidth: '650px', margin: '0 auto 40px auto' }}>
             <h2 style={{ fontSize: '2rem', fontWeight: 900, color: '#ffffff', marginBottom: '10px' }}>
