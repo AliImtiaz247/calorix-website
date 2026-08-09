@@ -15,15 +15,11 @@ export default function Hero() {
     return () => motionQuery.removeEventListener('change', handleChange);
   }, []);
 
-  // Stagger animation variants
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.12,
-        delayChildren: 0.1,
-      },
+      transition: { staggerChildren: 0.12, delayChildren: 0.1 },
     },
   };
 
@@ -50,7 +46,6 @@ export default function Hero() {
       }}
       className="bg-grid-pattern"
     >
-      {/* Deep Atmospheric Glows */}
       <div className="bg-glow-emerald" style={{ top: '8%', left: '-10%', width: '550px', height: '550px' }} />
       <div className="bg-glow-violet" style={{ bottom: '5%', right: '-10%', width: '550px', height: '550px' }} />
 
@@ -64,19 +59,16 @@ export default function Hero() {
           }}
           className="hero-grid"
         >
-          {/* Left Column: Marketing Copy & Actions */}
           <motion.div
             variants={reducedMotion ? {} : containerVariants}
             initial="hidden"
             animate="visible"
           >
-            {/* Top AI Vision Pill */}
             <motion.div variants={itemVariants} className="glass-pill" style={{ marginBottom: '20px', borderColor: 'rgba(16, 185, 129, 0.35)' }}>
               <Sparkles size={16} color="#34d399" />
-              <span style={{ color: '#34d399', fontWeight: 800, letterSpacing: '0.5px' }}>Next-Gen AI Vision Health</span>
+              <span style={{ color: '#34d399', fontWeight: 800, letterSpacing: '0.5px' }}>AI-Powered Nutrition</span>
             </motion.div>
 
-            {/* Logo Brand Title */}
             <motion.div
               variants={itemVariants}
               style={{
@@ -91,7 +83,6 @@ export default function Hero() {
               <span className="text-gradient-emerald">CALORIX</span>
             </motion.div>
 
-            {/* Slogan */}
             <motion.div
               variants={itemVariants}
               style={{
@@ -107,7 +98,6 @@ export default function Hero() {
               Snap. Track. Thrive.
             </motion.div>
 
-            {/* Main Headline */}
             <motion.h1
               variants={itemVariants}
               style={{
@@ -122,7 +112,6 @@ export default function Hero() {
               Your AI-Powered <span className="text-gradient-cyan">Nutrition & Health</span> Companion
             </motion.h1>
 
-            {/* Subheadline Description */}
             <motion.p
               variants={itemVariants}
               style={{
@@ -136,7 +125,6 @@ export default function Hero() {
               Snap a photo of your food, understand your nutrition, track your activity, and stay on top of your health goals with Calorix.
             </motion.p>
 
-            {/* Premium 3D Interactive Buttons */}
             <motion.div
               variants={itemVariants}
               style={{
@@ -147,25 +135,14 @@ export default function Hero() {
                 marginBottom: '48px',
               }}
             >
-              <a
-                href="#features"
-                className="btn-hero-primary"
-                tabIndex={0}
-                aria-label="Explore Calorix Features"
-              >
+              <a href="#features" className="btn-hero-primary" tabIndex={0} aria-label="Explore Calorix features">
                 <Camera size={20} /> Explore Calorix
               </a>
-              <a
-                href="#cta"
-                className="btn-hero-secondary"
-                tabIndex={0}
-                aria-label="Get Started with Calorix"
-              >
+              <a href="#cta" className="btn-hero-secondary" tabIndex={0} aria-label="Get started with Calorix">
                 Get Started <ArrowRight size={18} />
               </a>
             </motion.div>
 
-            {/* Trust Badges */}
             <motion.div
               variants={itemVariants}
               style={{
@@ -177,27 +154,26 @@ export default function Hero() {
               }}
             >
               <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '1.35rem', fontWeight: 800, color: '#ffffff' }}>
-                  <ShieldCheck size={20} color="#34d399" /> 99.4%
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '1.15rem', fontWeight: 800, color: '#ffffff' }}>
+                  <ShieldCheck size={20} color="#34d399" /> Privacy-first
                 </div>
-                <div style={{ fontSize: '0.825rem', color: '#94a3b8', marginTop: '2px' }}>AI Food Accuracy</div>
+                <div style={{ fontSize: '0.825rem', color: '#94a3b8', marginTop: '2px' }}>Health-focused experience</div>
               </div>
               <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '1.35rem', fontWeight: 800, color: '#ffffff' }}>
-                  <Zap size={20} color="#38bdf8" /> &lt;1 Sec
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '1.15rem', fontWeight: 800, color: '#ffffff' }}>
+                  <Zap size={20} color="#38bdf8" /> AI-powered
                 </div>
-                <div style={{ fontSize: '0.825rem', color: '#94a3b8', marginTop: '2px' }}>Instant Scan Speed</div>
+                <div style={{ fontSize: '0.825rem', color: '#94a3b8', marginTop: '2px' }}>Food analysis workflow</div>
               </div>
               <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '1.35rem', fontWeight: 800, color: '#ffffff' }}>
-                  <Award size={20} color="#a78bfa" /> 100k+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '1.15rem', fontWeight: 800, color: '#ffffff' }}>
+                  <Award size={20} color="#a78bfa" /> All-in-one
                 </div>
-                <div style={{ fontSize: '0.825rem', color: '#94a3b8', marginTop: '2px' }}>Meals Analyzed</div>
+                <div style={{ fontSize: '0.825rem', color: '#94a3b8', marginTop: '2px' }}>Nutrition & activity tracking</div>
               </div>
             </motion.div>
           </motion.div>
 
-          {/* Right Column: Interactive 3D Phone & Objects Stage */}
           <motion.div
             initial={reducedMotion ? { opacity: 1 } : { opacity: 0, x: 40, scale: 0.95 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
@@ -209,7 +185,6 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Hero CSS & Media Queries */}
       <style>{`
         @media (max-width: 992px) {
           .hero-grid {
