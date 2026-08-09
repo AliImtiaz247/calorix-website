@@ -1,29 +1,15 @@
-import { lazy, Suspense, useState } from 'react';
+import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import LoadingScreen from './components/LoadingScreen';
-
-// Keep the initial bundle small: the 3D-heavy sections are loaded only when needed.
-const Navbar = lazy(() => import('./components/Navbar'));
-const Hero = lazy(() => import('./components/Hero'));
-const Features = lazy(() => import('./components/Features'));
-const HowItWorks = lazy(() => import('./components/HowItWorks'));
-const AppShowcase = lazy(() => import('./components/AppShowcase'));
-const Technology = lazy(() => import('./components/Technology'));
-const Developer = lazy(() => import('./components/Developer'));
-const CTA = lazy(() => import('./components/CTA'));
-const Footer = lazy(() => import('./components/Footer'));
-
-function SectionFallback() {
-  return (
-    <div
-      aria-hidden="true"
-      style={{
-        minHeight: '24px',
-        background: '#07090e',
-      }}
-    />
-  );
-}
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
+import Features from './components/Features';
+import HowItWorks from './components/HowItWorks';
+import AppShowcase from './components/AppShowcase';
+import Technology from './components/Technology';
+import Developer from './components/Developer';
+import CTA from './components/CTA';
+import Footer from './components/Footer';
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -49,19 +35,17 @@ export default function App() {
         animate={{ opacity: isLoading ? 0 : 1 }}
         transition={{ duration: 0.8, ease: 'easeOut' }}
       >
-        <Suspense fallback={<SectionFallback />}>
-          <Navbar />
-          <main>
-            <Hero />
-            <Features />
-            <HowItWorks />
-            <AppShowcase />
-            <Technology />
-            <Developer />
-            <CTA />
-          </main>
-          <Footer />
-        </Suspense>
+        <Navbar />
+        <main>
+          <Hero />
+          <Features />
+          <HowItWorks />
+          <AppShowcase />
+          <Technology />
+          <Developer />
+          <CTA />
+        </main>
+        <Footer />
       </motion.div>
     </div>
   );
