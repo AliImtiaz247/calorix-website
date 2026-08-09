@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Camera, ArrowRight, Flame, ShieldCheck } from 'lucide-react';
-import CalorixPhone from './3d/CalorixPhone';
+import CTAVisual from './3d/CTAVisual';
 
-export default function CTA() {
+interface CTAProps {
+  onNavigateDownload?: () => void;
+}
+
+export default function CTA({ onNavigateDownload }: CTAProps) {
   const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
@@ -13,6 +17,23 @@ export default function CTA() {
     motionQuery.addEventListener('change', handleChange);
     return () => motionQuery.removeEventListener('change', handleChange);
   }, []);
+
+  const handleDownloadClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (onNavigateDownload) {
+      onNavigateDownload();
+    } else {
+      window.location.hash = '#download';
+    }
+  };
+
+  const handleExploreClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const element = document.querySelector('#features');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <section id="cta" style={{ position: 'relative', background: '#07090e', overflow: 'hidden', padding: '100px 0' }}>
@@ -78,10 +99,10 @@ export default function CTA() {
               </p>
 
               <div style={{ display: 'flex', gap: '18px', flexWrap: 'wrap', marginBottom: '32px' }}>
-                <a href="#hero" className="btn-hero-primary" tabIndex={0} aria-label="Get Started with Calorix">
+                <a href="#download" onClick={handleDownloadClick} className="btn-hero-primary" tabIndex={0} aria-label="Get Started with Calorix App">
                   <Camera size={20} /> Get Started
                 </a>
-                <a href="#features" className="btn-hero-secondary" tabIndex={0} aria-label="Explore Calorix Features">
+                <a href="#features" onClick={handleExploreClick} className="btn-hero-secondary" tabIndex={0} aria-label="Explore Calorix Features">
                   Explore Calorix <ArrowRight size={18} />
                 </a>
               </div>
@@ -97,9 +118,9 @@ export default function CTA() {
               </div>
             </div>
 
-            {/* Right Column: Floating 3D Phone & Orbiting Objects */}
-            <div style={{ position: 'relative', width: '100%', height: '460px' }}>
-              <CalorixPhone activeTab="scanner" reducedMotion={reducedMotion} />
+            {/* Right Column: Floating 3D Phone & Orbiting Objects Stage */}
+            <div>
+              <CTAVisual reducedMotion={reducedMotion} />
             </div>
           </div>
         </motion.div>

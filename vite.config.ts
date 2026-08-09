@@ -1,12 +1,9 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import { cloudflare } from '@cloudflare/vite-plugin';
 
 export default defineConfig({
-  plugins: [react()],
-
-  // React Three Fiber relies on a shared React/fiber context. Explicitly
-  // dedupe these packages so production builds cannot load duplicate module
-  // instances and trigger "Hooks can only be used within the Canvas" errors.
+  plugins: [react(), cloudflare()],
   resolve: {
     dedupe: [
       'react',
@@ -15,7 +12,6 @@ export default defineConfig({
       'three',
     ],
   },
-
   optimizeDeps: {
     include: [
       'react',
@@ -25,4 +21,4 @@ export default defineConfig({
       'three',
     ],
   },
-})
+});

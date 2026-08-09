@@ -33,18 +33,41 @@ function MobileShowcaseVisual({ activeScreenIndex }: { activeScreenIndex: number
   );
 }
 
+function StaticShowcaseFallback() {
+  return (
+    <div style={{ width: '100%', height: '520px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ width: '280px', height: '540px', borderRadius: '32px', background: '#0b0f19', border: '8px solid #1e293b', boxShadow: '0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(16,185,129,0.2)', padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div style={{ fontSize: '12px', fontWeight: 800, color: '#34d399' }}>CALORIX APP PREVIEW</div>
+        <div style={{ fontSize: '20px', fontWeight: 900, color: '#fff' }}>Interactive 3D Showcase</div>
+        <div style={{ fontSize: '13px', color: '#94a3b8', lineHeight: 1.5 }}>
+          Explore all 6 application screens seamlessly in the full WebGL experience.
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function ShowcaseScene({ activeScreenIndex, reducedMotion = false }: ShowcaseSceneProps) {
   const [hoveredLabel, setHoveredLabel] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth <= 768);
+  const [webGlSupported, setWebGlSupported] = useState(true);
 
   useEffect(() => {
     const update = () => setIsMobile(window.innerWidth <= 768);
     update();
     window.addEventListener('resize', update, { passive: true });
+    try {
+      const canvas = document.createElement('canvas');
+      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      if (!gl) setWebGlSupported(false);
+    } catch {
+      setWebGlSupported(false);
+    }
     return () => window.removeEventListener('resize', update);
   }, []);
 
   if (isMobile) return <MobileShowcaseVisual activeScreenIndex={activeScreenIndex} />;
+  if (!webGlSupported) return <StaticShowcaseFallback />;
 
   const featureLabels = [
     { id: 'recognition', label: 'AI Food Recognition', pos: [-3.2, 1.8, 0] as [number, number, number], icon: Zap, color: '#10b981' },
@@ -56,7 +79,7 @@ export default function ShowcaseScene({ activeScreenIndex, reducedMotion = false
 
   return (
     <div style={{ position: 'relative', width: '100%', height: '560px', minHeight: '560px', overflow: 'hidden', background: 'radial-gradient(circle at 50% 50%, rgba(16,185,129,0.10) 0%, rgba(139,92,246,0.05) 32%, rgba(7,9,14,0) 70%)' }}>
-      <Canvas camera={{ position: [0, 0, 8.5], fov: 45 }} dpr={[1, 2]} gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }} style={{ width: '100%', height: '100%', display: 'block', background: 'transparent' }} onCreated={({ gl }) => gl.setClearColor(0x07090e, 0)}>
+      <Canvas camera={{ position: [0, 0, 8.5], fov: 45 }} dpr={[1, 1.5]} gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }} style={{ width: '100%', height: '100%', display: 'block', background: 'transparent' }} onCreated={({ gl }) => gl.setClearColor(0x07090e, 0)}>
         <ambientLight intensity={1.5} />
         <directionalLight position={[10, 10, 10]} intensity={2.5} />
         <pointLight position={[-8, 6, 5]} color="#10b981" intensity={3} />

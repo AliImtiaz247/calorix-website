@@ -4,7 +4,11 @@ import type { Variants } from 'framer-motion';
 import { Camera, Sparkles, ArrowRight, ShieldCheck, Zap, Award } from 'lucide-react';
 import HeroScene from './3d/HeroScene';
 
-export default function Hero() {
+interface HeroProps {
+  onNavigateDownload?: () => void;
+}
+
+export default function Hero({ onNavigateDownload }: HeroProps) {
   const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
@@ -14,6 +18,23 @@ export default function Hero() {
     motionQuery.addEventListener('change', handleChange);
     return () => motionQuery.removeEventListener('change', handleChange);
   }, []);
+
+  const handleDownloadClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (onNavigateDownload) {
+      onNavigateDownload();
+    } else {
+      window.location.hash = '#download';
+    }
+  };
+
+  const handleExploreClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const element = document.querySelector('#features');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -135,11 +156,11 @@ export default function Hero() {
                 marginBottom: '48px',
               }}
             >
-              <a href="#features" className="btn-hero-primary" tabIndex={0} aria-label="Explore Calorix features">
-                <Camera size={20} /> Explore Calorix
+              <a href="#download" onClick={handleDownloadClick} className="btn-hero-primary" tabIndex={0} aria-label="Get Started with Calorix App">
+                <Camera size={20} /> Get Started
               </a>
-              <a href="#cta" className="btn-hero-secondary" tabIndex={0} aria-label="Get started with Calorix">
-                Get Started <ArrowRight size={18} />
+              <a href="#features" onClick={handleExploreClick} className="btn-hero-secondary" tabIndex={0} aria-label="Explore Calorix features">
+                Explore Features <ArrowRight size={18} />
               </a>
             </motion.div>
 

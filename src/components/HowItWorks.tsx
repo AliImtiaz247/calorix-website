@@ -6,7 +6,11 @@ import AICore from './3d/AICore';
 import ProgressDashboard from './3d/ProgressDashboard';
 import JourneyPath from './3d/JourneyPath';
 
-export default function HowItWorks() {
+interface HowItWorksProps {
+  onNavigateDownload?: () => void;
+}
+
+export default function HowItWorks({ onNavigateDownload: _onNavigateDownload }: HowItWorksProps) {
   const [activeStep, setActiveStep] = useState(0);
   const [reducedMotion, setReducedMotion] = useState(false);
 

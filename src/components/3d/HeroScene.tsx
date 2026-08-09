@@ -73,8 +73,14 @@ export default function HeroScene({ reducedMotion = false }: HeroSceneProps) {
 
   return (
     <WebGLErrorBoundary fallback={<StaticPhoneFallback />}>
-      <div style={{ position: 'relative', width: '100%', height: '560px', minHeight: '560px', overflow: 'hidden', background: 'radial-gradient(circle at 50% 50%, rgba(16,185,129,0.09) 0%, rgba(7,9,14,0) 62%)' }}>
-        <Canvas camera={{ position: [0, 0, 8.5], fov: 45 }} dpr={[1, 2]} gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }} style={{ width: '100%', height: '100%', display: 'block', background: 'transparent' }} onCreated={({ gl }) => gl.setClearColor(0x07090e, 0)}>
+      <div style={{ position: 'relative', width: '100%', height: isMobile ? '380px' : '560px', minHeight: isMobile ? '380px' : '560px', overflow: 'hidden', background: 'radial-gradient(circle at 50% 50%, rgba(16,185,129,0.09) 0%, rgba(7,9,14,0) 62%)' }}>
+        <Canvas
+          dpr={[1, 1.5]}
+          camera={{ position: [0, 0, isMobile ? 9.5 : 8.5], fov: isMobile ? 52 : 45 }}
+          gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+          style={{ width: '100%', height: '100%', display: 'block', background: 'transparent' }}
+          onCreated={({ gl }) => gl.setClearColor(0x07090e, 0)}
+        >
           <ambientLight intensity={1.4} />
           <directionalLight position={[10, 12, 10]} intensity={2.5} color="#ffffff" />
           <pointLight position={[-10, -8, -5]} color="#10b981" intensity={3} distance={15} />

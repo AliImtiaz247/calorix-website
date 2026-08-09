@@ -7,7 +7,7 @@ import { Icosahedron, Sphere, Float, Sparkles as R3FSparkles } from '@react-thre
 const developerLinks = {
   github: 'YOUR_GITHUB_URL',
   linkedin: 'YOUR_LINKEDIN_URL',
-  email: 'ali.imtiaz.chandio@example.com',
+  email: 'ali.imtiazchandio0123@gmail.com',
 };
 
 function DeveloperAvatarVisual() {
@@ -31,7 +31,11 @@ function DeveloperAvatarVisual() {
   );
 }
 
-export default function Developer() {
+interface DeveloperProps {
+  onNavigateDownload?: () => void;
+}
+
+export default function Developer({ onNavigateDownload: _onNavigateDownload }: DeveloperProps) {
   const [activeStep, setActiveStep] = useState(4);
 
   const timelineSteps = [

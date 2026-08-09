@@ -13,7 +13,11 @@ import {
 } from 'lucide-react';
 import ShowcaseScene from './3d/ShowcaseScene';
 
-export default function AppShowcase() {
+interface AppShowcaseProps {
+  onNavigateDownload?: () => void;
+}
+
+export default function AppShowcase({ onNavigateDownload: _onNavigateDownload }: AppShowcaseProps) {
   const [activeScreenIndex, setActiveScreenIndex] = useState(0);
   const [reducedMotion, setReducedMotion] = useState(false);
 

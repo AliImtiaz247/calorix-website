@@ -95,7 +95,7 @@ function CoreNeuralOrb({ reducedMotion = false }: AICoreProps) {
 export default function AICore({ reducedMotion = false }: AICoreProps) {
   return (
     <div style={{ width: '100%', height: '520px', position: 'relative' }}>
-      <Canvas camera={{ position: [0, 0, 7.5], fov: 45 }} gl={{ alpha: true }}>
+      <Canvas dpr={[1, 1.5]} camera={{ position: [0, 0, 7.5], fov: 45 }} gl={{ alpha: true }}>
         <ambientLight intensity={1.5} />
         <directionalLight position={[8, 10, 8]} intensity={2.5} />
         <pointLight position={[-6, 6, 4]} color="#38bdf8" intensity={3.5} />

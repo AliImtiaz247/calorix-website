@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Component } from 'react';
+import type { ReactNode, ErrorInfo } from 'react';
 import { motion } from 'framer-motion';
 import LoadingScene3D from './3d/LoadingScene3D';
 import { Sparkles, Activity } from 'lucide-react';
@@ -7,10 +8,26 @@ interface LoadingScreenProps {
   onComplete?: () => void;
 }
 
+class LoadingSceneErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean }> {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.warn('LoadingScene3D error caught:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) return null;
+    return this.props.children;
+  }
+}
+
 export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
   const [progress, setProgress] = useState(0);
 
-  // Status message based on current progress
   const getStatusText = (prog: number) => {
     if (prog < 20) return 'Initializing Calorix...';
     if (prog < 45) return 'Preparing AI experience...';
@@ -20,7 +37,15 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
   };
 
   useEffect(() => {
-    // Smooth controlled progress loop targeted at ~2.5 seconds total
+    let completed = false;
+
+    const finishLoading = () => {
+      if (completed) return;
+      completed = true;
+      if (onComplete) onComplete();
+    };
+
+    // Main smooth controlled progress loop (~2.4s)
     const totalDurationMs = 2400;
     const intervalMs = 30;
     const stepIncrement = (100 / totalDurationMs) * intervalMs;
@@ -30,16 +55,20 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
         const next = prev + stepIncrement + (Math.random() * 0.8);
         if (next >= 100) {
           clearInterval(timer);
-          setTimeout(() => {
-            if (onComplete) onComplete();
-          }, 300);
+          setTimeout(finishLoading, 200);
           return 100;
         }
         return next;
       });
     }, intervalMs);
 
-    return () => clearInterval(timer);
+    // Guaranteed safety timeout (3.5s max)
+    const safetyTimeout = setTimeout(finishLoading, 3500);
+
+    return () => {
+      clearInterval(timer);
+      clearTimeout(safetyTimeout);
+    };
   }, [onComplete]);
 
   const roundedProgress = Math.min(100, Math.floor(progress));
@@ -52,7 +81,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
         opacity: 0,
         scale: 1.04,
         filter: 'blur(12px)',
-        transition: { duration: 0.8, ease: [0.4, 0, 0.2, 1] },
+        transition: { duration: 0.6, ease: 'easeOut' },
       }}
       style={{
         position: 'fixed',
@@ -68,10 +97,12 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
         userSelect: 'none',
       }}
     >
-      {/* 3D Background Canvas */}
-      <LoadingScene3D />
+      {/* 3D Background Canvas with Error Boundary */}
+      <LoadingSceneErrorBoundary>
+        <LoadingScene3D />
+      </LoadingSceneErrorBoundary>
 
-      {/* Radial Ambient Glow behind Brand */}
+      {/* Radial Ambient Glow */}
       <div
         style={{
           position: 'absolute',
@@ -84,11 +115,11 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
         }}
       />
 
-      {/* Central Glassmorphism Branding & Progress Card */}
+      {/* Central Glassmorphism Card */}
       <motion.div
         initial={{ opacity: 0, y: 20, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.6, ease: 'easeOut' }}
+        transition={{ duration: 0.5, ease: 'easeOut' }}
         style={{
           position: 'relative',
           zIndex: 10,
@@ -96,22 +127,18 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
           flexDirection: 'column',
           alignItems: 'center',
           textAlign: 'center',
-          padding: '40px 48px',
+          padding: 'clamp(24px, 5vw, 48px)',
           maxWidth: '520px',
-          width: '90%',
-          background: 'rgba(11, 15, 25, 0.65)',
+          width: '92%',
+          background: 'rgba(11, 15, 25, 0.75)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
           borderRadius: '32px',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          boxShadow: '0 30px 70px rgba(0, 0, 0, 0.6), 0 0 40px rgba(16, 185, 129, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
+          border: '1px solid rgba(255, 255, 255, 0.12)',
+          boxShadow: '0 30px 70px rgba(0, 0, 0, 0.7), 0 0 40px rgba(16, 185, 129, 0.15)',
         }}
       >
-        {/* Top AI Chip Badge */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.2 }}
+        <div
           style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -127,9 +154,8 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
           <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#34d399', letterSpacing: '1.5px', textTransform: 'uppercase' }}>
             AI Health Intelligence
           </span>
-        </motion.div>
+        </div>
 
-        {/* Brand Logo Title */}
         <h1
           style={{
             fontFamily: 'var(--font-heading)',
@@ -141,13 +167,11 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
             background: 'linear-gradient(135deg, #ffffff 0%, #34d399 50%, #10b981 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
-            filter: 'drop-shadow(0 4px 20px rgba(16, 185, 129, 0.4))',
           }}
         >
           CALORIX
         </h1>
 
-        {/* Slogan */}
         <p
           style={{
             fontFamily: 'var(--font-sans)',
@@ -163,7 +187,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
           Snap. Track. Thrive.
         </p>
 
-        {/* Thin Premium Progress Bar */}
+        {/* Progress Bar */}
         <div
           style={{
             width: '100%',
@@ -173,7 +197,6 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
             overflow: 'hidden',
             marginBottom: '16px',
             position: 'relative',
-            boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.5)',
           }}
         >
           <div
@@ -188,7 +211,6 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
           />
         </div>
 
-        {/* Progress Percentage & Dynamic Status Row */}
         <div
           style={{
             width: '100%',

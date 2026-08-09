@@ -101,7 +101,7 @@ function DashboardStage({ reducedMotion = false }: ProgressDashboardProps) {
 export default function ProgressDashboard({ reducedMotion = false }: ProgressDashboardProps) {
   return (
     <div style={{ width: '100%', height: '520px', position: 'relative' }}>
-      <Canvas camera={{ position: [0, 0, 7.5], fov: 45 }} gl={{ alpha: true }}>
+      <Canvas dpr={[1, 1.5]} camera={{ position: [0, 0, 7.5], fov: 45 }} gl={{ alpha: true }}>
         <ambientLight intensity={1.5} />
         <directionalLight position={[10, 10, 10]} intensity={2.5} />
         <pointLight position={[-6, 6, 4]} color="#8b5cf6" intensity={3.5} />

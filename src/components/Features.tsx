@@ -39,7 +39,11 @@ interface FeatureItem {
   extendedInfo: string[];
 }
 
-export default function Features() {
+interface FeaturesProps {
+  onNavigateDownload?: () => void;
+}
+
+export default function Features({ onNavigateDownload: _onNavigateDownload }: FeaturesProps) {
   const [selectedFeature, setSelectedFeature] = useState<FeatureItem | null>(null);
 
   const featuresList: FeatureItem[] = [

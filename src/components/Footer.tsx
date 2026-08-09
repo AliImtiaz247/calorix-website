@@ -2,8 +2,21 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Flame, X, ShieldCheck, FileText } from 'lucide-react';
 
-export default function Footer() {
+interface FooterProps {
+  onNavigateDownload?: () => void;
+}
+
+export default function Footer({ onNavigateDownload }: FooterProps) {
   const [activeModal, setActiveModal] = useState<'privacy' | 'terms' | null>(null);
+
+  const handleDownloadClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (onNavigateDownload) {
+      onNavigateDownload();
+    } else {
+      window.location.hash = '#download';
+    }
+  };
 
   return (
     <footer
@@ -31,6 +44,10 @@ export default function Footer() {
           <div>
             <a
               href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -88,9 +105,10 @@ export default function Footer() {
               Product
             </h4>
             <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '0.9rem' }}>
+              <li><a href="#download" onClick={handleDownloadClick} style={{ color: '#34d399', fontWeight: 700, textDecoration: 'none' }}>Get Started / Download App</a></li>
               <li><a href="#features" style={{ color: '#94a3b8', textDecoration: 'none' }}>Features</a></li>
               <li><a href="#how-it-works" style={{ color: '#94a3b8', textDecoration: 'none' }}>How It Works</a></li>
-              <li><a href="#app-showcase" style={{ color: '#94a3b8', textDecoration: 'none' }}>App</a></li>
+              <li><a href="#app-showcase" style={{ color: '#94a3b8', textDecoration: 'none' }}>App Showcase</a></li>
               <li><a href="#technology" style={{ color: '#94a3b8', textDecoration: 'none' }}>Technology</a></li>
             </ul>
           </div>
@@ -102,7 +120,7 @@ export default function Footer() {
             </h4>
             <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '0.9rem' }}>
               <li><a href="#developer" style={{ color: '#94a3b8', textDecoration: 'none' }}>Developer</a></li>
-              <li><a href="mailto:ali.imtiaz.chandio@example.com" style={{ color: '#94a3b8', textDecoration: 'none' }}>Contact</a></li>
+              <li><a href="mailto:ali.imtiazchandio0123@gmail.com" style={{ color: '#94a3b8', textDecoration: 'none' }}>Contact</a></li>
             </ul>
           </div>
 

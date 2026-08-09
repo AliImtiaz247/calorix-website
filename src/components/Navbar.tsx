@@ -1,9 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Flame, Menu, X, Sparkles, ArrowRight } from 'lucide-react';
 
-export default function Navbar() {
+interface NavbarProps {
+  onNavigateDownload?: () => void;
+}
+
+export default function Navbar({ onNavigateDownload }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -19,6 +24,26 @@ export default function Navbar() {
     } else {
       document.body.style.overflow = 'auto';
     }
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMobileMenuOpen(false);
+    };
+
+    const handleOutsideClick = (e: MouseEvent | TouchEvent) => {
+      if (headerRef.current && !headerRef.current.contains(e.target as Node)) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('mousedown', handleOutsideClick);
+    document.addEventListener('touchstart', handleOutsideClick);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('mousedown', handleOutsideClick);
+      document.removeEventListener('touchstart', handleOutsideClick);
+    };
   }, [mobileMenuOpen]);
 
   const navLinks = [
@@ -31,14 +56,29 @@ export default function Navbar() {
 
   const handleNavClick = (href: string) => {
     setMobileMenuOpen(false);
+    if (href === '#download' && onNavigateDownload) {
+      onNavigateDownload();
+      return;
+    }
     const element = document.querySelector(href);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
+  const handleDownloadClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setMobileMenuOpen(false);
+    if (onNavigateDownload) {
+      onNavigateDownload();
+    } else {
+      window.location.hash = '#download';
+    }
+  };
+
   return (
     <header
+      ref={headerRef}
       style={{
         position: 'fixed',
         top: 0,
@@ -47,7 +87,7 @@ export default function Navbar() {
         zIndex: 100,
         padding: scrolled ? '12px 24px' : '20px 24px',
         transition: 'all 0.3s ease',
-        background: scrolled ? 'rgba(7, 9, 14, 0.88)' : 'transparent',
+        background: scrolled ? 'rgba(7, 9, 14, 0.92)' : 'transparent',
         backdropFilter: scrolled ? 'blur(16px)' : 'none',
         WebkitBackdropFilter: scrolled ? 'blur(16px)' : 'none',
         borderBottom: scrolled ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid transparent',
@@ -152,11 +192,8 @@ export default function Navbar() {
         {/* Desktop Action */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }} className="desktop-actions">
           <a
-            href="#cta"
-            onClick={(e) => {
-              e.preventDefault();
-              handleNavClick('#cta');
-            }}
+            href="#download"
+            onClick={handleDownloadClick}
             className="btn-primary"
             style={{ padding: '10px 22px', fontSize: '0.9rem' }}
           >
@@ -164,20 +201,25 @@ export default function Navbar() {
           </a>
         </div>
 
-        {/* Mobile Menu Button */}
+        {/* Mobile Menu Toggle Button */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           style={{
             display: 'none',
-            background: 'rgba(255,255,255,0.06)',
-            border: '1px solid rgba(255,255,255,0.1)',
+            background: 'rgba(255,255,255,0.08)',
+            border: '1px solid rgba(255,255,255,0.15)',
             color: '#ffffff',
             padding: '10px',
             borderRadius: '12px',
             cursor: 'pointer',
+            minHeight: '44px',
+            minWidth: '44px',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
           className="mobile-menu-btn"
           aria-label="Toggle Navigation Menu"
+          aria-expanded={mobileMenuOpen}
         >
           {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
@@ -191,13 +233,15 @@ export default function Navbar() {
             top: '100%',
             left: 0,
             right: 0,
-            background: '#0b0f19',
+            background: 'rgba(11, 15, 25, 0.96)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
             borderBottom: '1px solid rgba(255,255,255,0.1)',
             padding: '24px',
             display: 'flex',
             flexDirection: 'column',
             gap: '16px',
-            boxShadow: '0 20px 40px rgba(0,0,0,0.8)',
+            boxShadow: '0 25px 50px rgba(0,0,0,0.9)',
           }}
         >
           {navLinks.map((link) => (
@@ -212,22 +256,22 @@ export default function Navbar() {
                 color: '#f8fafc',
                 textDecoration: 'none',
                 fontSize: '1.1rem',
-                fontWeight: 600,
-                padding: '8px 0',
-                borderBottom: '1px solid rgba(255,255,255,0.05)',
+                fontWeight: 700,
+                padding: '12px 0',
+                minHeight: '44px',
+                display: 'flex',
+                alignItems: 'center',
+                borderBottom: '1px solid rgba(255,255,255,0.06)',
               }}
             >
               {link.name}
             </a>
           ))}
           <a
-            href="#cta"
-            onClick={(e) => {
-              e.preventDefault();
-              handleNavClick('#cta');
-            }}
+            href="#download"
+            onClick={handleDownloadClick}
             className="btn-primary"
-            style={{ width: '100%', marginTop: '8px' }}
+            style={{ width: '100%', marginTop: '8px', minHeight: '48px' }}
           >
             Get Started <ArrowRight size={18} />
           </a>

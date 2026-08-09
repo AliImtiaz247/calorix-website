@@ -3,7 +3,6 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { Sparkles, Torus, Sphere, Icosahedron, Dodecahedron } from '@react-three/drei';
 import * as THREE from 'three';
 
-
 function CalorieRing({ reducedMotion }: { reducedMotion: boolean }) {
   const ringRef = useRef<THREE.Mesh>(null);
   const outerRingRef = useRef<THREE.Mesh>(null);
@@ -24,7 +23,6 @@ function CalorieRing({ reducedMotion }: { reducedMotion: boolean }) {
 
   return (
     <group>
-      {/* Primary Calorie/Nutrition Ring */}
       <Torus ref={ringRef} args={[1.8, 0.14, 24, 80]}>
         <meshPhysicalMaterial
           color="#10b981"
@@ -39,7 +37,6 @@ function CalorieRing({ reducedMotion }: { reducedMotion: boolean }) {
         />
       </Torus>
 
-      {/* Secondary Cyan Accent Orbit */}
       <Torus ref={outerRingRef} args={[2.4, 0.04, 16, 64]} rotation={[Math.PI / 3, 0, 0]}>
         <meshPhysicalMaterial
           color="#06b6d4"
@@ -72,7 +69,6 @@ function AICoreCore({ reducedMotion }: { reducedMotion: boolean }) {
 
   return (
     <group>
-      {/* Inner Glowing AI Energy Sphere */}
       <Sphere ref={coreRef} args={[0.75, 32, 32]}>
         <meshPhysicalMaterial
           color="#10b981"
@@ -85,7 +81,6 @@ function AICoreCore({ reducedMotion }: { reducedMotion: boolean }) {
         />
       </Sphere>
 
-      {/* Outer Geometric AI Lattice */}
       <Icosahedron ref={wireframeRef} args={[1.05, 0]}>
         <meshBasicMaterial color="#34d399" wireframe opacity={0.6} transparent />
       </Icosahedron>
@@ -107,24 +102,20 @@ function OrbitingNutrientNodes({ reducedMotion, isMobile }: { reducedMotion: boo
 
   return (
     <group ref={groupRef}>
-      {/* Protein Node (Cyan) */}
       <Sphere args={[0.22, 16, 16]} position={[2.6, 0.8, -0.4]}>
         <meshPhysicalMaterial color="#38bdf8" emissive="#0284c7" emissiveIntensity={0.6} roughness={0.2} metalness={0.7} />
       </Sphere>
 
-      {/* Carb Node (Amber) */}
       <Dodecahedron args={[0.2, 0]} position={[-2.4, -1.0, 0.5]}>
         <meshPhysicalMaterial color="#f59e0b" emissive="#d97706" emissiveIntensity={0.6} roughness={0.3} metalness={0.6} />
       </Dodecahedron>
 
-      {/* Fat/Fiber Node (Violet) */}
       <Icosahedron args={[0.24, 0]} position={[1.8, -1.8, 0.8]}>
         <meshPhysicalMaterial color="#a78bfa" emissive="#7c3aed" emissiveIntensity={0.6} roughness={0.2} metalness={0.8} />
       </Icosahedron>
 
       {!isMobile && (
         <>
-          {/* Extra AI Data Nodes on desktop */}
           <Sphere args={[0.15, 12, 12]} position={[-1.9, 1.9, -0.8]}>
             <meshPhysicalMaterial color="#34d399" emissive="#059669" emissiveIntensity={0.8} />
           </Sphere>
@@ -141,7 +132,6 @@ function CameraRig({ reducedMotion }: { reducedMotion: boolean }) {
   useFrame((state) => {
     if (reducedMotion) return;
     const { x, y } = state.pointer;
-    // Smooth camera mouse parallax
     state.camera.position.x = THREE.MathUtils.lerp(state.camera.position.x, x * 0.6, 0.05);
     state.camera.position.y = THREE.MathUtils.lerp(state.camera.position.y, y * 0.6, 0.05);
     state.camera.lookAt(0, 0, 0);
@@ -153,8 +143,17 @@ function CameraRig({ reducedMotion }: { reducedMotion: boolean }) {
 export default function LoadingScene3D() {
   const [reducedMotion, setReducedMotion] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [webGlSupported, setWebGlSupported] = useState(true);
 
   useEffect(() => {
+    try {
+      const canvas = document.createElement('canvas');
+      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      if (!gl) setWebGlSupported(false);
+    } catch {
+      setWebGlSupported(false);
+    }
+
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     setReducedMotion(motionQuery.matches);
     const handleMotionChange = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
@@ -170,9 +169,12 @@ export default function LoadingScene3D() {
     };
   }, []);
 
+  if (!webGlSupported) return null;
+
   return (
     <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0 }}>
       <Canvas
+        dpr={[1, 1.5]}
         camera={{ position: [0, 0, 7], fov: 45 }}
         gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
         style={{ width: '100%', height: '100%' }}
@@ -189,7 +191,6 @@ export default function LoadingScene3D() {
         <AICoreCore reducedMotion={reducedMotion} />
         <OrbitingNutrientNodes reducedMotion={reducedMotion} isMobile={isMobile} />
 
-        {/* Floating Glowing Particle Field */}
         <Sparkles
           count={isMobile ? 35 : 80}
           scale={7}

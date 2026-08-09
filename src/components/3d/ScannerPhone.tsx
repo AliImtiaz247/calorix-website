@@ -182,7 +182,7 @@ function PhoneCameraModel({ reducedMotion = false }: ScannerPhoneProps) {
 export default function ScannerPhone({ reducedMotion = false }: ScannerPhoneProps) {
   return (
     <div style={{ width: '100%', height: '520px', position: 'relative' }}>
-      <Canvas camera={{ position: [0, 0, 8.5], fov: 45 }} gl={{ alpha: true }}>
+      <Canvas dpr={[1, 1.5]} camera={{ position: [0, 0, 8.5], fov: 45 }} gl={{ alpha: true }}>
         <ambientLight intensity={1.5} />
         <directionalLight position={[10, 10, 10]} intensity={2.5} />
         <pointLight position={[-8, -8, -5]} color="#10b981" intensity={3} />

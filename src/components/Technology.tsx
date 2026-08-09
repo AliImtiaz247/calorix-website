@@ -26,7 +26,11 @@ function TechCoreVisual() {
   );
 }
 
-export default function Technology() {
+interface TechnologyProps {
+  onNavigateDownload?: () => void;
+}
+
+export default function Technology({ onNavigateDownload: _onNavigateDownload }: TechnologyProps) {
   const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
