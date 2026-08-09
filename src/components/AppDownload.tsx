@@ -14,11 +14,6 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 
-// Final/stable releases automatically use GitHub's latest stable release.
-// When you publish the final release, upload the APK asset with this exact name: Calorix.apk
-const FINAL_DOWNLOAD_URL = 'https://github.com/AliImtiaz247/calorix-website/releases/latest/download/Calorix.apk';
-
-// Current pre-release. Keep this fixed so it remains downloadable even after a future final release.
 const PRERELEASE_DOWNLOAD_URL = 'https://github.com/AliImtiaz247/calorix-website/releases/download/v1.0.0/Calorix-v1.0.0.apk';
 
 interface AppDownloadProps {
@@ -32,18 +27,20 @@ export default function AppDownload({ onBack }: AppDownloadProps) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
-  const handleDownload = (url: string, message: string) => {
+  const showMessage = (message: string) => {
     setToastMessage(message);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
 
+  const handlePrereleaseDownload = () => {
+    showMessage('Starting Calorix v1.0.0 pre-release download...');
     const link = document.createElement('a');
-    link.href = url;
+    link.href = PRERELEASE_DOWNLOAD_URL;
     link.target = '_blank';
     link.rel = 'noopener noreferrer';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-
-    setTimeout(() => setToastMessage(null), 3000);
   };
 
   const featureCards = [
@@ -60,22 +57,11 @@ export default function AppDownload({ onBack }: AppDownloadProps) {
       <div className="bg-glow-emerald" style={{ top: '10%', left: '5%', width: '600px', height: '600px' }} />
       <div className="bg-glow-violet" style={{ top: '40%', right: '5%', width: '600px', height: '600px' }} />
 
-      <header
-        style={{
-          position: 'sticky',
-          top: 0,
-          zIndex: 100,
-          background: 'rgba(7, 9, 14, 0.92)',
-          backdropFilter: 'blur(16px)',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-          padding: '16px 24px',
-        }}
-      >
+      <header style={{ position: 'sticky', top: 0, zIndex: 100, background: 'rgba(7, 9, 14, 0.92)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', padding: '16px 24px' }}>
         <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <button onClick={onBack} className="btn-hero-secondary" style={{ padding: '8px 18px', fontSize: '0.9rem', minHeight: '44px' }} aria-label="Back to website">
             <ArrowLeft size={18} /> Back to website
           </button>
-
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <div style={{ width: '36px', height: '36px', borderRadius: '12px', background: 'linear-gradient(135deg, #10b981, #06b6d4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Flame size={20} color="#ffffff" />
@@ -88,12 +74,7 @@ export default function AppDownload({ onBack }: AppDownloadProps) {
       <main className="section-container" style={{ paddingTop: '60px', paddingBottom: '80px' }}>
         <AnimatePresence>
           {toastMessage && (
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              style={{ position: 'fixed', top: '90px', left: '50%', transform: 'translateX(-50%)', zIndex: 9999, background: 'rgba(11, 15, 25, 0.95)', border: '1px solid #34d399', boxShadow: '0 10px 30px rgba(16, 185, 129, 0.35)', borderRadius: '16px', padding: '12px 24px', display: 'flex', alignItems: 'center', gap: '10px', color: '#ffffff', fontWeight: 800, fontSize: '0.95rem' }}
-            >
+            <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} style={{ position: 'fixed', top: '90px', left: '50%', transform: 'translateX(-50%)', zIndex: 9999, background: 'rgba(11, 15, 25, 0.95)', border: '1px solid #34d399', boxShadow: '0 10px 30px rgba(16, 185, 129, 0.35)', borderRadius: '16px', padding: '12px 24px', display: 'flex', alignItems: 'center', gap: '10px', color: '#ffffff', fontWeight: 800, fontSize: '0.95rem' }}>
               <CheckCircle2 size={18} color="#34d399" />
               {toastMessage}
             </motion.div>
@@ -105,55 +86,33 @@ export default function AppDownload({ onBack }: AppDownloadProps) {
             <Sparkles size={14} color="#34d399" />
             <span style={{ color: '#34d399', fontWeight: 800 }}>OFFICIAL APPLICATION DOWNLOAD</span>
           </div>
-
           <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2.5rem, 5vw, 4.2rem)', fontWeight: 900, color: '#ffffff', lineHeight: 1.1, marginBottom: '16px', letterSpacing: '-1px' }}>
-            Your health. <br />
-            <span className="text-gradient-emerald">Your progress.</span> <br />
-            Your Calorix.
+            Your health. <br /><span className="text-gradient-emerald">Your progress.</span> <br />Your Calorix.
           </h1>
-
           <p style={{ fontSize: '1.15rem', color: '#94a3b8', lineHeight: 1.7 }}>
             Download the official Calorix Android APK and start tracking your nutrition, calories, activity, and progress with AI-powered insights.
           </p>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', alignItems: 'stretch', marginBottom: '80px' }} className="download-grid">
-          {/* Final/stable release: follows the latest non-pre-release GitHub Release. */}
           <div className="glass-panel" style={{ padding: '28px', borderColor: 'rgba(16, 185, 129, 0.4)', background: 'linear-gradient(135deg, rgba(16,185,129,0.12) 0%, rgba(11,15,25,0.92) 100%)', display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            <div style={{ display: 'inline-flex', alignSelf: 'flex-start', padding: '6px 12px', borderRadius: '999px', background: 'rgba(16,185,129,0.16)', border: '1px solid rgba(16,185,129,0.35)', color: '#34d399', fontSize: '0.75rem', fontWeight: 900, letterSpacing: '0.5px' }}>
-              FINAL RELEASE
-            </div>
+            <div style={{ display: 'inline-flex', alignSelf: 'flex-start', padding: '6px 12px', borderRadius: '999px', background: 'rgba(16,185,129,0.16)', border: '1px solid rgba(16,185,129,0.35)', color: '#34d399', fontSize: '0.75rem', fontWeight: 900, letterSpacing: '0.5px' }}>FINAL RELEASE</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-              <div style={{ width: '52px', height: '52px', borderRadius: '16px', background: 'rgba(16,185,129,0.25)', border: '1px solid rgba(16,185,129,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Smartphone size={28} color="#34d399" />
-              </div>
-              <div>
-                <h3 style={{ fontSize: '1.5rem', fontWeight: 900, color: '#ffffff' }}>Android APK</h3>
-                <div style={{ fontSize: '0.9rem', color: '#94a3b8' }}>Latest final version</div>
-              </div>
+              <div style={{ width: '52px', height: '52px', borderRadius: '16px', background: 'rgba(16,185,129,0.25)', border: '1px solid rgba(16,185,129,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Smartphone size={28} color="#34d399" /></div>
+              <div><h3 style={{ fontSize: '1.5rem', fontWeight: 900, color: '#ffffff' }}>Android APK</h3><div style={{ fontSize: '0.9rem', color: '#94a3b8' }}>Coming soon</div></div>
             </div>
-
-            <button onClick={() => handleDownload(FINAL_DOWNLOAD_URL, 'Starting latest final Calorix APK download...')} className="btn-hero-primary" style={{ width: '100%', minHeight: '52px', marginTop: '6px', fontSize: '1.05rem' }} aria-label="Download latest final Calorix Android APK">
-              <Download size={20} /> Download Final APK
+            <button onClick={() => showMessage('The final Calorix APK is coming soon. Please check back later!')} className="btn-hero-primary" style={{ width: '100%', minHeight: '52px', marginTop: '6px', fontSize: '1.05rem' }} aria-label="Final Calorix Android APK coming soon">
+              <Download size={20} /> Final APK — Coming Soon
             </button>
           </div>
 
-          {/* Pre-release: permanently points to the current v1.0.0 test APK. */}
           <div className="glass-panel" style={{ padding: '28px', borderColor: 'rgba(139, 92, 246, 0.5)', background: 'linear-gradient(135deg, rgba(139,92,246,0.14) 0%, rgba(11,15,25,0.92) 100%)', display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            <div style={{ display: 'inline-flex', alignSelf: 'flex-start', padding: '6px 12px', borderRadius: '999px', background: 'rgba(139,92,246,0.18)', border: '1px solid rgba(139,92,246,0.4)', color: '#c4b5fd', fontSize: '0.75rem', fontWeight: 900, letterSpacing: '0.5px' }}>
-              PRE-RELEASE • v1.0.0
-            </div>
+            <div style={{ display: 'inline-flex', alignSelf: 'flex-start', padding: '6px 12px', borderRadius: '999px', background: 'rgba(139,92,246,0.18)', border: '1px solid rgba(139,92,246,0.4)', color: '#c4b5fd', fontSize: '0.75rem', fontWeight: 900, letterSpacing: '0.5px' }}>PRE-RELEASE • v1.0.0</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-              <div style={{ width: '52px', height: '52px', borderRadius: '16px', background: 'rgba(139,92,246,0.22)', border: '1px solid rgba(139,92,246,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Sparkles size={28} color="#c4b5fd" />
-              </div>
-              <div>
-                <h3 style={{ fontSize: '1.5rem', fontWeight: 900, color: '#ffffff' }}>Test Version</h3>
-                <div style={{ fontSize: '0.9rem', color: '#94a3b8' }}>Early access • ~64.5 MB</div>
-              </div>
+              <div style={{ width: '52px', height: '52px', borderRadius: '16px', background: 'rgba(139,92,246,0.22)', border: '1px solid rgba(139,92,246,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Sparkles size={28} color="#c4b5fd" /></div>
+              <div><h3 style={{ fontSize: '1.5rem', fontWeight: 900, color: '#ffffff' }}>Test Version</h3><div style={{ fontSize: '0.9rem', color: '#94a3b8' }}>Early access • ~64.5 MB</div></div>
             </div>
-
-            <button onClick={() => handleDownload(PRERELEASE_DOWNLOAD_URL, 'Starting Calorix v1.0.0 pre-release download...')} style={{ width: '100%', minHeight: '52px', marginTop: '6px', fontSize: '1.05rem', borderRadius: '14px', border: '1px solid rgba(167,139,250,0.55)', background: 'rgba(139,92,246,0.16)', color: '#ffffff', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }} aria-label="Download Calorix v1.0.0 pre-release APK">
+            <button onClick={handlePrereleaseDownload} style={{ width: '100%', minHeight: '52px', marginTop: '6px', fontSize: '1.05rem', borderRadius: '14px', border: '1px solid rgba(167,139,250,0.55)', background: 'rgba(139,92,246,0.16)', color: '#ffffff', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }} aria-label="Download Calorix v1.0.0 pre-release APK">
               <Download size={20} /> Download Pre-release APK
             </button>
           </div>
@@ -164,16 +123,13 @@ export default function AppDownload({ onBack }: AppDownloadProps) {
             <h2 style={{ fontSize: '2rem', fontWeight: 900, color: '#ffffff', marginBottom: '10px' }}>Everything you need to stay on track</h2>
             <p style={{ fontSize: '1rem', color: '#94a3b8' }}>Calorix combines camera food recognition, calorie budgets, and activity tracking in one intuitive app.</p>
           </div>
-
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '24px' }}>
             {featureCards.map((feat) => {
               const IconC = feat.icon;
               return (
                 <div key={feat.title} className="glass-panel" style={{ padding: '24px', borderColor: `${feat.color}35` }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
-                    <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: `${feat.color}20`, border: `1px solid ${feat.color}40`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <IconC size={20} color={feat.color} />
-                    </div>
+                    <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: `${feat.color}20`, border: `1px solid ${feat.color}40`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><IconC size={20} color={feat.color} /></div>
                     <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#ffffff' }}>{feat.title}</h3>
                   </div>
                   <p style={{ fontSize: '0.9rem', color: '#94a3b8', lineHeight: 1.5 }}>{feat.desc}</p>
@@ -184,13 +140,7 @@ export default function AppDownload({ onBack }: AppDownloadProps) {
         </div>
       </main>
 
-      <style>{`
-        @media (max-width: 900px) {
-          .download-grid {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
+      <style>{`@media (max-width: 900px) { .download-grid { grid-template-columns: 1fr !important; } }`}</style>
     </div>
   );
 }
