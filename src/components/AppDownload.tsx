@@ -13,7 +13,6 @@ import {
   Download,
   CheckCircle2,
 } from 'lucide-react';
-import CTAVisual from './3d/CTAVisual';
 
 // Stable releases automatically use GitHub's latest stable release.
 const STABLE_DOWNLOAD_URL = 'https://github.com/AliImtiaz247/calorix-website/releases/latest/download/Calorix.apk';
@@ -28,19 +27,9 @@ interface AppDownloadProps {
 
 export default function AppDownload({ onBack }: AppDownloadProps) {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setReducedMotion(motionQuery.matches);
-    const handleMotionChange = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
-    motionQuery.addEventListener('change', handleMotionChange);
-
-    return () => {
-      motionQuery.removeEventListener('change', handleMotionChange);
-    };
   }, []);
 
   const handleDownload = (url: string, message: string) => {
@@ -172,7 +161,6 @@ export default function AppDownload({ onBack }: AppDownloadProps) {
           }}
           className="download-grid"
         >
-          {/* Stable release card. It automatically follows the latest stable GitHub Release. */}
           <div
             className="glass-panel"
             style={{
@@ -207,7 +195,6 @@ export default function AppDownload({ onBack }: AppDownloadProps) {
             </button>
           </div>
 
-          {/* Current pre-release card. This remains pinned to v1.0.0. */}
           <div
             className="glass-panel"
             style={{
